@@ -1,4 +1,8 @@
-export function toMs(time, unit) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.toMs = toMs;
+exports.toSeconds = toSeconds;
+function toMs(time, unit) {
     switch (unit) {
         case 'seconds':
             return time * 1000;
@@ -12,7 +16,7 @@ export function toMs(time, unit) {
             return time;
     }
 }
-export function toSeconds(time, unit) {
+function toSeconds(time, unit) {
     switch (unit) {
         case 'milliseconds':
             return time / 1000;

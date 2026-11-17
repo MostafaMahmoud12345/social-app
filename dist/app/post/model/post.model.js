@@ -1,5 +1,8 @@
-import { model, Schema, Types } from "mongoose";
-const schema = new Schema({
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.Post = void 0;
+const mongoose_1 = require("mongoose");
+const schema = new mongoose_1.Schema({
     content: {
         type: String,
         required: true,
@@ -8,7 +11,7 @@ const schema = new Schema({
         maxlength: 300
     },
     userId: {
-        type: Types.ObjectId,
+        type: mongoose_1.Types.ObjectId,
         ref: 'User',
         requird: true
     },
@@ -21,4 +24,4 @@ const schema = new Schema({
         default: 0
     }
 });
-export const Post = model('Post', schema);
+exports.Post = (0, mongoose_1.model)('Post', schema);

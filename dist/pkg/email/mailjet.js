@@ -1,10 +1,16 @@
-import Mailjet from "node-mailjet";
-export class MailjetProvider {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.MailjetProvider = void 0;
+const node_mailjet_1 = __importDefault(require("node-mailjet"));
+class MailjetProvider {
     client;
     fromEmail;
     fromName;
     constructor(config) {
-        this.client = new Mailjet({
+        this.client = new node_mailjet_1.default({
             apiKey: config.apiKey, apiSecret: config.apiSecret,
         });
         this.fromName = config.fromName;
@@ -23,3 +29,4 @@ export class MailjetProvider {
         });
     }
 }
+exports.MailjetProvider = MailjetProvider;

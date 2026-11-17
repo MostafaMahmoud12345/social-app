@@ -1,10 +1,13 @@
-import { MailjetProvider } from "../../pkg/email/mailjet.js";
-import { NodeMailerProvider } from "../../pkg/email/nodemailer.js";
-import { env } from "../config/env.js";
-export const mailjetProvider = new MailjetProvider({
-    apiKey: env.mailjet.apiKey,
-    apiSecret: env.mailjet.apiSecret,
-    fromEmail: env.mailjet.fromEmail,
-    fromName: env.mailjet.fromName,
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.nodeMailerProvider = exports.mailjetProvider = void 0;
+const mailjet_js_1 = require("../../pkg/email/mailjet.js");
+const nodemailer_js_1 = require("../../pkg/email/nodemailer.js");
+const env_js_1 = require("../config/env.js");
+exports.mailjetProvider = new mailjet_js_1.MailjetProvider({
+    apiKey: env_js_1.env.mailjet.apiKey,
+    apiSecret: env_js_1.env.mailjet.apiSecret,
+    fromEmail: env_js_1.env.mailjet.fromEmail,
+    fromName: env_js_1.env.mailjet.fromName,
 });
-export const nodeMailerProvider = new NodeMailerProvider(env.nodemailer);
+exports.nodeMailerProvider = new nodemailer_js_1.NodeMailerProvider(env_js_1.env.nodemailer);

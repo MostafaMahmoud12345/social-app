@@ -1,8 +1,10 @@
-import { AbstractRepository } from "../../../lib/abstract.repository/abstract.repository";
-import { Post } from "../model/post.model";
-class PostRepository extends AbstractRepository {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const abstract_repository_1 = require("../../../lib/abstract.repository/abstract.repository");
+const post_model_1 = require("../model/post.model");
+class PostRepository extends abstract_repository_1.AbstractRepository {
     constructor() {
-        super(Post);
+        super(post_model_1.Post);
     }
 }
-export default new PostRepository();
+exports.default = new PostRepository();

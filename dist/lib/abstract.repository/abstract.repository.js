@@ -1,4 +1,7 @@
-export class AbstractRepository {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.AbstractRepository = void 0;
+class AbstractRepository {
     model;
     constructor(model) {
         this.model = model;
@@ -16,3 +19,4 @@ export class AbstractRepository {
         return await this.model.findOne(filter);
     }
 }
+exports.AbstractRepository = AbstractRepository;

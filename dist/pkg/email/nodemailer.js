@@ -1,9 +1,12 @@
-import { createTransport } from 'nodemailer';
-export class NodeMailerProvider {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.NodeMailerProvider = void 0;
+const nodemailer_1 = require("nodemailer");
+class NodeMailerProvider {
     client;
     fromEmail;
     constructor(config) {
-        this.client = createTransport({
+        this.client = (0, nodemailer_1.createTransport)({
             host: config.host,
             port: config.port,
             secure: false,
@@ -23,3 +26,4 @@ export class NodeMailerProvider {
         });
     }
 }
+exports.NodeMailerProvider = NodeMailerProvider;

@@ -1,7 +1,10 @@
-import { RedisCacheProvider } from "../../pkg/cache/redis";
-import { env } from "../config/env";
-export const cacheProvider = new RedisCacheProvider({
-    host: env.redis.host,
-    port: env.redis.port,
-    password: env.redis.password || ''
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cacheProvider = void 0;
+const redis_1 = require("../../pkg/cache/redis");
+const env_1 = require("../config/env");
+exports.cacheProvider = new redis_1.RedisCacheProvider({
+    host: env_1.env.redis.host,
+    port: env_1.env.redis.port,
+    password: env_1.env.redis.password || ''
 });

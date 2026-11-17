@@ -1,4 +1,7 @@
-export function globalErrorHandler(err, req, res, _next) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.globalErrorHandler = globalErrorHandler;
+function globalErrorHandler(err, req, res, _next) {
     if (err.isOperational === true) {
         return res.status(err.statusCode).json({
             message: err.message,

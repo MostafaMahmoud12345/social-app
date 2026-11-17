@@ -1,11 +1,15 @@
-import { AbstractRepository } from "../../../lib/abstract.repository/abstract.repository";
-import { User } from "../model/user.model";
-export class UserRepository extends AbstractRepository {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UserRepository = void 0;
+const abstract_repository_1 = require("../../../lib/abstract.repository/abstract.repository");
+const user_model_1 = require("../model/user.model");
+class UserRepository extends abstract_repository_1.AbstractRepository {
     constructor() {
-        super(User);
+        super(user_model_1.User);
     }
     async findByEmail(email) {
-        return await User.findOne({ email: email });
+        return await user_model_1.User.findOne({ email: email });
     }
 }
-export default new UserRepository();
+exports.UserRepository = UserRepository;
+exports.default = new UserRepository();

@@ -1,8 +1,13 @@
-import authService from "../service/auth.service";
-import { setCookies } from "../utils";
-import { AppError } from "../../../lib/error/error";
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const auth_service_1 = __importDefault(require("../service/auth.service"));
+const utils_1 = require("../utils");
+const error_1 = require("../../../lib/error/error");
 class AuthController {
-    authService = authService;
+    authService = auth_service_1.default;
     constructor() {
     }
     register = async (req, res, next) => {
@@ -32,7 +37,7 @@ class AuthController {
                     success: true
                 });
             }
-            setCookies(res, result.accessToken, result.refreshToken);
+            (0, utils_1.setCookies)(res, result.accessToken, result.refreshToken);
             res.status(200).json({
                 message: 'Logged in successfully',
                 success: true,
@@ -46,7 +51,7 @@ class AuthController {
     verifyCodeTwoStepVerification = async (req, res, next) => {
         try {
             const result = await this.authService.vverifyCodeTwoStepVerification(req.body);
-            setCookies(res, result.accessToken, result.refreshToken);
+            (0, utils_1.setCookies)(res, result.accessToken, result.refreshToken);
             res.status(200).json({
                 message: 'Two-step verification verified successfully',
                 success: true,
@@ -109,7 +114,7 @@ class AuthController {
         try {
             const idToken = req.body.idToken || req.body.token;
             if (!idToken) {
-                throw new AppError('Google ID token is required', 400);
+                throw new error_1.AppError('Google ID token is required', 400);
             }
             const accessToken = await this.authService.loginWithCGoogle(idToken);
             res.status(200).json({
@@ -126,10 +131,10 @@ class AuthController {
         try {
             const token = req.cookies?.refresh_token || req.body?.refreshToken || req.body?.token;
             if (!token) {
-                throw new AppError('Refresh token is required', 400);
+                throw new error_1.AppError('Refresh token is required', 400);
             }
             const result = await this.authService.refreshTokenFn(token);
-            setCookies(res, result.accessToken, result.refreshToken);
+            (0, utils_1.setCookies)(res, result.accessToken, result.refreshToken);
             res.status(200).json({
                 message: 'Token refreshed successfully',
                 success: true,
@@ -141,4 +146,4 @@ class AuthController {
         }
     };
 }
-export default new AuthController();
+exports.default = new AuthController();

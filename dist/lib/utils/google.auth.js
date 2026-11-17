@@ -1,16 +1,19 @@
-import { OAuth2Client } from "google-auth-library";
-import { AppError } from "../error/error";
-import { env } from "../config/env";
-const client = new OAuth2Client();
-export async function verifyGoogleToken(idToken) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.verifyGoogleToken = verifyGoogleToken;
+const google_auth_library_1 = require("google-auth-library");
+const error_1 = require("../error/error");
+const env_1 = require("../config/env");
+const client = new google_auth_library_1.OAuth2Client();
+async function verifyGoogleToken(idToken) {
     try {
         const ticket = await client.verifyIdToken({
             idToken: idToken,
-            audience: [env.google.webClientId, env.google.iosClientId]
+            audience: [env_1.env.google.webClientId, env_1.env.google.iosClientId]
         });
         return ticket.getPayload();
     }
     catch (err) {
-        throw new AppError('invalid google token', 403);
+        throw new error_1.AppError('invalid google token', 403);
     }
 }

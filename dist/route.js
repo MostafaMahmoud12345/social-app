@@ -1,7 +1,13 @@
-import { Router } from "express";
-import authRouter from "./app/auth/auth.rout";
-export const router = Router();
-router.use('/auth', authRouter);
-router.use('/user');
-router.use('/post');
-router.use('/comment');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+const express_1 = require("express");
+const auth_rout_1 = __importDefault(require("./app/auth/auth.rout"));
+exports.router = (0, express_1.Router)();
+exports.router.use('/auth', auth_rout_1.default);
+// router.use('/user');
+// router.use('/post');
+// router.use('/comment');

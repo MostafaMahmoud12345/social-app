@@ -1,27 +1,35 @@
-import { z } from 'zod';
-import 'dotenv/config';
-const schema = z.object({
-    PORT: z.string().default('3000'),
-    MONGODB_URL: z.string(),
-    JWT_ACCESS_SECRET: z.string(),
-    JWT_REFRESH_SECRET: z.string(),
-    MAIL_USER: z.string().trim().toLowerCase(),
-    MAIL_PASSWORD: z.string(),
-    GOOGLE_WEB_OAUTH_CLIENT_ID: z.string(),
-    REDIS_PORT: z.string().default('6379'),
-    REDIS_HOST: z.string(),
-    REDIS_PASSWORD: z.string(),
-    MAILJET_API_KEY: z.string(),
-    MAILJET_API_SECRET: z.string(),
-    MAILJET_FROM_EMAIL: z.string(),
-    MAILJET_FROM_NAME: z.string(),
-    S3_REGION: z.string(),
-    S3_BUCKET_NAME: z.string(),
-    S3_ACCESS_KEY: z.string(),
-    S3_SECRET_KEY: z.string(),
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.env = void 0;
+const zod_1 = require("zod");
+const dotenv_1 = require("dotenv");
+const path_1 = __importDefault(require("path"));
+(0, dotenv_1.config)({ path: path_1.default.resolve(process.cwd(), '.env') });
+const schema = zod_1.z.object({
+    PORT: zod_1.z.string().default('3000'),
+    MONGODB_URL: zod_1.z.string(),
+    JWT_ACCESS_SECRET: zod_1.z.string(),
+    JWT_REFRESH_SECRET: zod_1.z.string(),
+    MAIL_USER: zod_1.z.string().trim().toLowerCase(),
+    MAIL_PASSWORD: zod_1.z.string(),
+    GOOGLE_WEB_OAUTH_CLIENT_ID: zod_1.z.string(),
+    REDIS_PORT: zod_1.z.string().default('6379'),
+    REDIS_HOST: zod_1.z.string(),
+    REDIS_PASSWORD: zod_1.z.string(),
+    MAILJET_API_KEY: zod_1.z.string(),
+    MAILJET_API_SECRET: zod_1.z.string(),
+    MAILJET_FROM_EMAIL: zod_1.z.string(),
+    MAILJET_FROM_NAME: zod_1.z.string(),
+    S3_REGION: zod_1.z.string(),
+    S3_BUCKET_NAME: zod_1.z.string(),
+    S3_ACCESS_KEY: zod_1.z.string(),
+    S3_SECRET_KEY: zod_1.z.string(),
 });
 const parsed = schema.parse(process.env);
-export const env = {
+exports.env = {
     port: Number(parsed.PORT),
     db: {
         url: parsed.MONGODB_URL,

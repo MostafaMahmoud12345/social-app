@@ -1,8 +1,14 @@
-import express from 'express';
-import { router } from "./route";
-export function createApp() {
-    const app = express();
-    app.use(express.json());
-    app.use('/api', router);
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.createApp = createApp;
+const express_1 = __importDefault(require("express"));
+const route_1 = require("./route");
+function createApp() {
+    const app = (0, express_1.default)();
+    app.use(express_1.default.json());
+    app.use('/api', route_1.router);
     return app;
 }

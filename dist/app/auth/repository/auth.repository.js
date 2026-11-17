@@ -1,5 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 class AuthRepository {
     constructor() {
     }
 }
-export default new AuthRepository();
+exports.default = new AuthRepository();

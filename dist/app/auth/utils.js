@@ -1,27 +1,37 @@
-import argon2 from "argon2";
-import jwt from 'jsonwebtoken';
-import { env } from "../../lib/config/env";
-import { toMs } from "../../pkg/utils/time";
-export async function hashPassword(password) {
-    return argon2.hash(password);
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.hashPassword = hashPassword;
+exports.comparePassword = comparePassword;
+exports.generateAccessToken = generateAccessToken;
+exports.generateRefreshToken = generateRefreshToken;
+exports.setCookies = setCookies;
+const argon2_1 = __importDefault(require("argon2"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const env_1 = require("../../lib/config/env");
+const time_1 = require("../../pkg/utils/time");
+async function hashPassword(password) {
+    return argon2_1.default.hash(password);
 }
-export async function comparePassword(password, hashedPassword) {
-    return argon2.verify(hashedPassword, password);
+async function comparePassword(password, hashedPassword) {
+    return argon2_1.default.verify(hashedPassword, password);
 }
-export function generateAccessToken(payload) {
-    return jwt.sign(payload, env.jwt.accessSecret, { expiresIn: toMs(1, 'hours') });
+function generateAccessToken(payload) {
+    return jsonwebtoken_1.default.sign(payload, env_1.env.jwt.accessSecret, { expiresIn: (0, time_1.toMs)(1, 'hours') });
 }
-export function generateRefreshToken(payload) {
-    return jwt.sign(payload, env.jwt.refreshSecret, { expiresIn: toMs(7, 'days') });
+function generateRefreshToken(payload) {
+    return jsonwebtoken_1.default.sign(payload, env_1.env.jwt.refreshSecret, { expiresIn: (0, time_1.toMs)(7, 'days') });
 }
-export function setCookies(res, accessToken, refreshToken) {
+function setCookies(res, accessToken, refreshToken) {
     res.cookie('access_token', accessToken, {
         httpOnly: true,
-        maxAge: toMs(1, 'hours')
+        maxAge: (0, time_1.toMs)(1, 'hours')
     });
     res.cookie('refresh_token', refreshToken, {
         httpOnly: true,
-        maxAge: toMs(7, 'days'),
+        maxAge: (0, time_1.toMs)(7, 'days'),
         path: '/api/auth/refresh-token'
     });
 }
