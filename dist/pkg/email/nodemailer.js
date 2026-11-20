@@ -7,15 +7,15 @@ class NodeMailerProvider {
     fromEmail;
     constructor(config) {
         this.client = (0, nodemailer_1.createTransport)({
-            host: config.host,
-            port: config.port,
-            secure: false,
+            host: "smtp.gmail.com",
+            port: 465,
+            secure: true,
             auth: {
                 user: config.name,
                 pass: config.pass
             }
         });
-        this.fromEmail = config.fromEmail;
+        this.fromEmail = config.name;
     }
     async send(email, subject, html) {
         await this.client.sendMail({

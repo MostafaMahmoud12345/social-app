@@ -23,7 +23,7 @@ class AuthService {
     userRepository = user_repository_1.default;
     mailProvider;
     constructor() {
-        this.mailProvider = init_1.mailjetProvider;
+        this.mailProvider = init_1.nodeMailerProvider;
     }
     register = async (registerDto) => {
         const userExist = await this.userRepository.findByEmail(registerDto.email);

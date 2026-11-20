@@ -9,6 +9,7 @@ const schema = new mongoose_1.Schema({
     password: { type: String, required: function () { return this.provider === enum_1.Provider.local; }, trim: true },
     provider: { type: Number, default: enum_1.Provider.local, enum: enum_1.Provider },
     gender: { type: Number, default: enum_1.Gender.male, enum: enum_1.Gender },
+    profilePicturePath: { type: String },
     isVerified: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     twoStepVerification: { type: Boolean, default: false },
