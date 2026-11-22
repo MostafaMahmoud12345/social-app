@@ -15,6 +15,9 @@ class UserService {
         const key = await this.cloudProvider.uploudFile(file, `users/${userId}`);
         await this.userRepository.update({ _id: userId }, { profilePicturePath: key });
     };
+    generatePresigneUrl = async (file, userId) => {
+        return await this.cloudProvider.generatePresigneUrl(file, `users/${userId}`);
+    };
     deletProfilePicture = async (userId) => {
         const user = await this.userRepository.getOne({ _id: userId });
         if (!user?.profilePicturePath) {

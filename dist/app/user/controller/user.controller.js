@@ -15,6 +15,16 @@ class UserController {
             next(error);
         }
     };
+    generatePresigneUrl = async (req, res, next) => {
+        try {
+            const { fileName, contentType } = req.body;
+            const url = await this.userService.generatePresigneUrl({ mimetype: contentType, originalname: fileName }, '6afe11b2307d7b482c2abce7');
+            res.json({ message: "ok", success: true, data: { url } });
+        }
+        catch (error) {
+            next(error);
+        }
+    };
     deletProfilePicture = async (req, res, next) => {
         try {
             await this.userService.deletProfilePicture('6afe11b2307d7b482c2abce7');
