@@ -4,10 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userRouter = void 0;
+const container_1 = __importDefault(require("../../lib/di/container"));
 const express_1 = require("express");
-const user_controller_1 = __importDefault(require("./controller/user.controller"));
 const multer_1 = require("../../lib/media/multer");
+const tokens_1 = require("../../lib/di/tokens");
+const userController = container_1.default.resolve(tokens_1.TOKENS.UserController);
 exports.userRouter = (0, express_1.Router)();
-exports.userRouter.post('/upload-profile-picture', (0, multer_1.uploadSingle)('pp'), user_controller_1.default.uploadProfilePicture);
-exports.userRouter.post('/generate-presigne-url', user_controller_1.default.generatePresigneUrl);
-exports.userRouter.delete('/delete-profile-picture', user_controller_1.default.deletProfilePicture);
+exports.userRouter.post('/upload-profile-picture', (0, multer_1.uploadSingle)('pp'), userController.uploadProfilePicture);
+exports.userRouter.post('/generate-presigne-url', userController.generatePresigneUrl);
+exports.userRouter.delete('/delete-profile-picture', userController.deletProfilePicture);

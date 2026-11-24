@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+require("reflect-metadata");
 const node_http_1 = __importDefault(require("node:http"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const app_js_1 = require("./app.js");
