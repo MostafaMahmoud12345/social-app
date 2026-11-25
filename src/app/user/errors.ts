@@ -1,10 +1,11 @@
-import {AppError} from "../../lib/error/error.js";
+import { AppError } from "../../lib/error/error.js";
 
-export const userNotExist =
-    new AppError('User Not Exists.', 404);// 404
-export const userAlreadyExist =
-    new AppError('User Already Exists.', 409);// 409
-export const userAlreadyVerified =
-    new AppError('User Already Verified.', 400);// 400
-export const userNotVerified =
-    new AppError('user Not Verified', 403);// 403
+export const userNotExist = new AppError('User Not Exists.', 404);
+export const userAlreadyExist = new AppError('User Already Exists.', 409);
+export const userAlreadyVerified = new AppError('User Already Verified.', 400);
+export const userNotVerified = new AppError('user Not Verified', 403);
+export const cannotFollowSelf = new AppError('You cannot follow yourself.', 400);
+export const alreadyFollowing = new AppError('You are already following this user.', 400);
+export const notFollowing = new AppError('You are not following this user.', 400);
+export const followRequestAlreadySent = new AppError('Follow request already sent.', 400);
+export const followRequestNotFound = new AppError('Follow request not found.', 404);

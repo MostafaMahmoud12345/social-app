@@ -15,5 +15,7 @@ authRouter.post('/send-otp', authController.sendOtp);
 authRouter.post('/reset-password', authController.resetPassword);
 authRouter.post('/google', authController.loginWithGoogle);
 authRouter.post('/refresh-token', authController.refreshToken);
+authRouter.post('/logout', authController.logout);
+authRouter.post('/revoke-token', authController.logout);
 
 export default authRouter;

@@ -172,12 +172,22 @@ let AuthService = class AuthService {
         });
     };
     refreshTokenFn = async (token) => {
+        const isRevoked = await init_2.cacheProvider.get(`revoked:${token}`);
+        if (isRevoked)
+            throw new error_1.AppError('Token has been revoked', 401);
         const payload = jsonwebtoken_1.default.verify(token, env_1.env.jwt.refreshSecret);
-        const accessToken = (0, utils_1.generateAccessToken)({ sub: payload.id, userName: payload.userName });
-        const refreshToken = (0, utils_1.generateRefreshToken)({ sub: payload.id, userName: payload.userName });
+        await init_2.cacheProvider.set(`revoked:${token}`, '1', (0, time_1.toSeconds)(7, 'days'));
+        const userId = payload.id || payload.sub;
+        const userName = payload.name || payload.userName;
+        const accessToken = (0, utils_1.generateAccessToken)({ id: userId, name: userName });
+        const refreshToken = (0, utils_1.generateRefreshToken)({ id: userId, name: userName });
         return {
             accessToken, refreshToken
         };
+    };
+    revokeToken = async (token) => {
+        jsonwebtoken_1.default.verify(token, env_1.env.jwt.refreshSecret);
+        await init_2.cacheProvider.set(`revoked:${token}`, '1', (0, time_1.toSeconds)(7, 'days'));
     };
 };
 exports.AuthService = AuthService;

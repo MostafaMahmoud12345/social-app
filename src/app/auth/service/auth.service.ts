@@ -179,13 +179,23 @@ if (!payload ) throw new AppError('Invalid Google token', 400);
 
 
  refreshTokenFn= async(token:string) =>{
+  const isRevoked = await cacheProvider.get(`revoked:${token}`);
+  if (isRevoked) throw new AppError('Token has been revoked', 401);
   const payload = Jwt.verify(token, env.jwt.refreshSecret) as TuserPayloud;
-  const accessToken = generateAccessToken({ sub: payload.id, userName: payload.userName });
-  const refreshToken = generateRefreshToken({ sub: payload.id, userName: payload.userName });
+  await cacheProvider.set(`revoked:${token}`, '1', toSeconds(7, 'days'));
+  const userId = payload.id || payload.sub;
+  const userName = payload.name || payload.userName;
+  const accessToken = generateAccessToken({ id: userId, name: userName });
+  const refreshToken = generateRefreshToken({ id: userId, name: userName });
   return {
     accessToken, refreshToken
   }
 }
+
+ revokeToken = async (token: string) => {
+  Jwt.verify(token, env.jwt.refreshSecret);
+  await cacheProvider.set(`revoked:${token}`, '1', toSeconds(7, 'days'));
+ }
 }
 
 

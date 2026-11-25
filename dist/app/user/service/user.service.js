@@ -16,11 +16,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserService = void 0;
-const user_repository_1 = require("./../repository/user.repository");
 const node_fs_1 = __importDefault(require("node:fs"));
-const error_1 = require("../../../lib/error/error");
 const tsyringe_1 = require("tsyringe");
+const user_repository_1 = require("../repository/user.repository");
+const error_1 = require("../../../lib/error/error");
 const tokens_1 = require("../../../lib/di/tokens");
+const errors_1 = require("../errors");
 let UserService = class UserService {
     userRepository;
     cloudProvider;
@@ -39,10 +40,144 @@ let UserService = class UserService {
     deletProfilePicture = async (userId) => {
         const user = await this.userRepository.getOne({ _id: userId });
         if (!user?.profilePicturePath) {
-            throw new error_1.AppError('profile picture not found', 404);
+            throw new error_1.AppError("profile picture not found", 404);
         }
         await this.cloudProvider.deleteFile(user.profilePicturePath);
-        await this.userRepository.update({ _id: userId }, { $unset: { profilePicturePath: '' } });
+        await this.userRepository.update({ _id: userId }, { $unset: { profilePicturePath: "" } });
+    };
+    getMyProfile = async (userId) => {
+        const user = await this.userRepository.findByIdSafe(userId);
+        if (!user)
+            throw errors_1.userNotExist;
+        return user;
+    };
+    getUserProfile = async (targetUserId, currentUserId) => {
+        const targetUser = await this.userRepository.findByIdSafe(targetUserId);
+        if (!targetUser)
+            throw errors_1.userNotExist;
+        const isOwner = targetUser._id.toString() === currentUserId;
+        const isFollower = targetUser.followers?.some((id) => id.toString() === currentUserId);
+        if (targetUser.isPrivate && !isOwner && !isFollower) {
+            return {
+                _id: targetUser._id,
+                userName: targetUser.userName,
+                profilePicturePath: targetUser.profilePicturePath,
+                isPrivate: targetUser.isPrivate,
+                followersCount: targetUser.followers?.length ?? 0,
+                followingCount: targetUser.following?.length ?? 0,
+            };
+        }
+        return targetUser;
+    };
+    updateProfile = async (userId, dto) => {
+        const updatedUser = await this.userRepository.update({ _id: userId, isDeleted: false }, {
+            ...(dto.userName !== undefined && { userName: dto.userName }),
+            ...(dto.bio !== undefined && { bio: dto.bio }),
+            ...(dto.phoneNumber !== undefined && { phoneNumber: dto.phoneNumber }),
+            ...(dto.gender !== undefined && { gender: dto.gender }),
+        }, { new: true, select: "-password" });
+        if (!updatedUser)
+            throw errors_1.userNotExist;
+        return updatedUser;
+    };
+    followUser = async (currentUserId, targetUserId) => {
+        if (currentUserId === targetUserId)
+            throw errors_1.cannotFollowSelf;
+        const targetUser = await this.userRepository.findByIdSafe(targetUserId);
+        if (!targetUser)
+            throw errors_1.userNotExist;
+        const isAlreadyFollowing = targetUser.followers?.some((id) => id.toString() === currentUserId);
+        if (isAlreadyFollowing)
+            throw errors_1.alreadyFollowing;
+        if (targetUser.isPrivate) {
+            const alreadyRequested = targetUser.followRequests?.some((id) => id.toString() === currentUserId);
+            if (alreadyRequested)
+                throw errors_1.followRequestAlreadySent;
+            await this.userRepository.update({ _id: targetUserId }, { $addToSet: { followRequests: currentUserId } });
+            return { status: "requested", message: "Follow request sent successfully" };
+        }
+        await this.userRepository.update({ _id: targetUserId }, { $addToSet: { followers: currentUserId } });
+        await this.userRepository.update({ _id: currentUserId }, { $addToSet: { following: targetUserId } });
+        return { status: "following", message: "User followed successfully" };
+    };
+    unfollowUser = async (currentUserId, targetUserId) => {
+        if (currentUserId === targetUserId)
+            throw errors_1.cannotFollowSelf;
+        const targetUser = await this.userRepository.findByIdSafe(targetUserId);
+        if (!targetUser)
+            throw errors_1.userNotExist;
+        const isFollowing = targetUser.followers?.some((id) => id.toString() === currentUserId);
+        if (!isFollowing)
+            throw errors_1.notFollowing;
+        await this.userRepository.update({ _id: targetUserId }, { $pull: { followers: currentUserId } });
+        await this.userRepository.update({ _id: currentUserId }, { $pull: { following: targetUserId } });
+    };
+    acceptFollowRequest = async (currentUserId, requesterId) => {
+        const currentUser = await this.userRepository.findByIdSafe(currentUserId);
+        if (!currentUser)
+            throw errors_1.userNotExist;
+        const hasRequest = currentUser.followRequests?.some((id) => id.toString() === requesterId);
+        if (!hasRequest)
+            throw errors_1.followRequestNotFound;
+        await this.userRepository.update({ _id: currentUserId }, {
+            $pull: { followRequests: requesterId },
+            $addToSet: { followers: requesterId },
+        });
+        await this.userRepository.update({ _id: requesterId }, { $addToSet: { following: currentUserId } });
+    };
+    rejectFollowRequest = async (currentUserId, requesterId) => {
+        const currentUser = await this.userRepository.findByIdSafe(currentUserId);
+        if (!currentUser)
+            throw errors_1.userNotExist;
+        const hasRequest = currentUser.followRequests?.some((id) => id.toString() === requesterId);
+        if (!hasRequest)
+            throw errors_1.followRequestNotFound;
+        await this.userRepository.update({ _id: currentUserId }, { $pull: { followRequests: requesterId } });
+    };
+    getFollowers = async (userId) => {
+        const user = await this.userRepository.getPopulatedFollowers(userId);
+        if (!user)
+            throw errors_1.userNotExist;
+        return user.followers ?? [];
+    };
+    getFollowing = async (userId) => {
+        const user = await this.userRepository.getPopulatedFollowing(userId);
+        if (!user)
+            throw errors_1.userNotExist;
+        return user.following ?? [];
+    };
+    searchUsers = async (query, currentUserId) => {
+        if (!query || !query.trim())
+            return [];
+        return await this.userRepository.searchUsers(query.trim(), currentUserId);
+    };
+    getSuggestedUsers = async (currentUserId) => {
+        const currentUser = await this.userRepository.findByIdSafe(currentUserId);
+        if (!currentUser)
+            throw errors_1.userNotExist;
+        const followingIds = (currentUser.following ?? []);
+        return await this.userRepository.getSuggestions(currentUserId, followingIds);
+    };
+    getAccountSettings = async (userId) => {
+        const user = await this.userRepository.findByIdSafe(userId);
+        if (!user)
+            throw errors_1.userNotExist;
+        return {
+            userName: user.userName,
+            email: user.email,
+            isPrivate: user.isPrivate ?? false,
+            twoStepVerification: user.twoStepVerification ?? false,
+            isVerified: user.isVerified ?? false,
+        };
+    };
+    updatePrivacy = async (userId, dto) => {
+        if (typeof dto.isPrivate !== "boolean") {
+            throw new error_1.AppError("isPrivate must be a boolean", 400);
+        }
+        const updatedUser = await this.userRepository.update({ _id: userId, isDeleted: false }, { isPrivate: dto.isPrivate }, { new: true, select: "userName email isPrivate" });
+        if (!updatedUser)
+            throw errors_1.userNotExist;
+        return updatedUser;
     };
 };
 exports.UserService = UserService;

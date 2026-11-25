@@ -158,6 +158,23 @@ let AuthController = class AuthController {
             next(error);
         }
     };
+    logout = async (req, res, next) => {
+        try {
+            const token = req.cookies?.refresh_token || req.body?.refreshToken || req.body?.token;
+            if (token) {
+                await this.authService.revokeToken(token);
+            }
+            res.clearCookie('access_token');
+            res.clearCookie('refresh_token', { path: '/api/auth/refresh-token' });
+            res.status(200).json({
+                message: 'Logged out and token revoked successfully',
+                success: true
+            });
+        }
+        catch (error) {
+            next(error);
+        }
+    };
 };
 exports.AuthController = AuthController;
 exports.AuthController = AuthController = __decorate([

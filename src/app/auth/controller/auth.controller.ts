@@ -144,5 +144,22 @@ import { TOKENS } from "../../../lib/di/tokens";
             next(error);
         }
     }
+
+    logout = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const token = req.cookies?.refresh_token || req.body?.refreshToken || req.body?.token;
+            if (token) {
+                await this.authService.revokeToken(token);
+            }
+            res.clearCookie('access_token');
+            res.clearCookie('refresh_token', { path: '/api/auth/refresh-token' });
+            res.status(200).json({
+                message: 'Logged out and token revoked successfully',
+                success: true
+            });
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 

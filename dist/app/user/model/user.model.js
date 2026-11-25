@@ -10,8 +10,14 @@ const schema = new mongoose_1.Schema({
     provider: { type: Number, default: enum_1.Provider.local, enum: enum_1.Provider },
     gender: { type: Number, default: enum_1.Gender.male, enum: enum_1.Gender },
     profilePicturePath: { type: String },
+    bio: { type: String, trim: true, maxlength: 200 },
+    phoneNumber: { type: String, trim: true },
+    isPrivate: { type: Boolean, default: false },
+    followers: [{ type: mongoose_1.Types.ObjectId, ref: 'User' }],
+    following: [{ type: mongoose_1.Types.ObjectId, ref: 'User' }],
+    followRequests: [{ type: mongoose_1.Types.ObjectId, ref: 'User' }],
     isVerified: { type: Boolean, default: false },
     isDeleted: { type: Boolean, default: false },
     twoStepVerification: { type: Boolean, default: false },
-});
+}, { timestamps: true });
 exports.User = (0, mongoose_1.model)('User', schema);
