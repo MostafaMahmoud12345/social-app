@@ -12,5 +12,8 @@ exports.TOKENS = {
     CacheProvider: Symbol('CacheProvider'),
     MailjetProvider: Symbol('mailjetProvider'),
     NodeMailerProvider: Symbol('NodeMailerProvider'),
-    FireBaseProvider: Symbol('FireBaseProvider')
+    FireBaseProvider: Symbol('FireBaseProvider'),
+    AuthService: Symbol('AuthService'),
+    AuthController: Symbol('AuthController'),
+    AuthRepository: Symbol('AuthRepository')
 };

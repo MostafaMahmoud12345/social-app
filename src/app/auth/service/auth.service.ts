@@ -2,7 +2,7 @@ import  Jwt  from 'jsonwebtoken';
 import { AppError } from '../../../lib/error/error';
 import { mailjetProvider, nodeMailerProvider } from './../../../lib/email/init';
 import {LoginDto, RegisterDto, SendOtpDto,VerifayAcountDto,Enable2StepVerificationDto,ResetPasswordDto,VerifyCodeActiveTwoStepVerificationDto, VverifyCodeTwoStepVerificationDto} from "../dto/dto";
-import userRepository, { UserRepository } from "../../user/repository/user.repository";
+import { UserRepository } from "../../user/repository/user.repository";
 import { generateOTPCode } from "../../../lib/utils/otp";
 import { userAlreadyExist,userNotExist,userNotVerified,userAlreadyVerified} from "../../user/errors";
 import { otpExpired,invalidCode,invalidPassword} from '../errors';
@@ -14,15 +14,15 @@ import { verifyGoogleToken } from '../../../lib/utils/google.auth';
 import { Provider } from '../enum/enum';
 import { TuserPayloud } from '../../../lib/interface/userPayloud.type';
 import { env } from '../../../lib/config/env';
-import { NodeMailerProvider } from '../../../pkg/notifaction/nodemailer';
+import { inject, injectable } from 'tsyringe';
+import { TOKENS } from '../../../lib/di/tokens';
 
-
+@injectable()
 export class AuthService{
    private twoStepVerificationKey = '2-step-verification:';
   private sendOtpKey = 'otp:';
-  private readonly userRepository:UserRepository=userRepository;
-  private readonly mailProvider:INotifactionProvider;
-    constructor(){
+  
+    constructor(@inject(TOKENS.UserRepository)private readonly userRepository:UserRepository,@inject(TOKENS.NodeMailerProvider) private readonly mailProvider:INotifactionProvider){
       this.mailProvider=nodeMailerProvider;
     }
   
@@ -191,4 +191,3 @@ if (!payload ) throw new AppError('Invalid Google token', 400);
 
 
 
-export default new AuthService()

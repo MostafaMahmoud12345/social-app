@@ -11,6 +11,9 @@ const post_repository_1 = require("../../app/post/repository/post.repository");
 const init_1 = require("../cache/init");
 const init_2 = require("../cloud/init");
 const init_3 = require("../email/init");
+const auth_service_1 = require("../../app/auth/service/auth.service");
+const auth_controller_1 = require("../../app/auth/controller/auth.controller");
+const auth_repository_1 = require("../../app/auth/repository/auth.repository");
 tsyringe_1.container.registerSingleton(tokens_1.TOKENS.UserService, user_service_1.UserService);
 tsyringe_1.container.registerSingleton(tokens_1.TOKENS.UserController, user_controller_1.UserController);
 tsyringe_1.container.registerSingleton(tokens_1.TOKENS.UserRepository, user_repository_1.UserRepository);
@@ -22,6 +25,9 @@ tsyringe_1.container.registerSingleton(tokens_1.TOKENS.PostRepository, post_repo
 tsyringe_1.container.registerInstance(tokens_1.TOKENS.CacheProvider, init_1.cacheProvider);
 tsyringe_1.container.registerInstance(tokens_1.TOKENS.CloudProvider, init_2.s3CloudProvider);
 tsyringe_1.container.registerInstance(tokens_1.TOKENS.MailjetProvider, init_3.mailjetProvider);
-tsyringe_1.container.registerInstance(tokens_1.TOKENS.MailjetProvider, init_3.nodeMailerProvider);
-tsyringe_1.container.registerInstance(tokens_1.TOKENS.MailjetProvider, init_3.mailjetProvider);
+tsyringe_1.container.registerInstance(tokens_1.TOKENS.NodeMailerProvider, init_3.nodeMailerProvider);
+///////////////////////////////////////////////////////////
+tsyringe_1.container.registerSingleton(tokens_1.TOKENS.AuthService, auth_service_1.AuthService);
+tsyringe_1.container.registerSingleton(tokens_1.TOKENS.AuthController, auth_controller_1.AuthController);
+tsyringe_1.container.registerSingleton(tokens_1.TOKENS.AuthRepository, auth_repository_1.AuthRepository);
 exports.default = tsyringe_1.container;

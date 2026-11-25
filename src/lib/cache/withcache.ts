@@ -1,8 +1,10 @@
+import container from '../di/container';
 import { NextFunction,Request ,Response} from "express";
-import {cacheProvider} from "./init.js";
+import { IcacheProvider } from '../../pkg/cache/cache.interface';
+import { TOKENS } from '../di/tokens';
 
 
-
+const cacheProvider=container.resolve<IcacheProvider>(TOKENS.CacheProvider)
 export function withCache(ttl = 3600) {
     return async (req:Request, res:Response, next:NextFunction) => {
 

@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from "express";
-import authService, { AuthService } from "../service/auth.service";
+import  { AuthService } from "../service/auth.service";
 import { setCookies } from "../utils";
 import { AppError } from "../../../lib/error/error";
-import { injectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
+import { TOKENS } from "../../../lib/di/tokens";
+@injectable()
  export class AuthController {
-    private authService: AuthService = authService;
 
-    constructor() {
+    constructor(@inject(TOKENS.AuthService)private authService: AuthService) {
     }
 
     register = async (req: Request, res: Response, next: NextFunction) => {
@@ -145,4 +146,3 @@ import { injectable } from "tsyringe";
     }
 }
 
-export default new AuthController();

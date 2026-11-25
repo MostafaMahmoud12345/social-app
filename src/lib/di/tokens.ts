@@ -1,3 +1,4 @@
+
 export const TOKENS={
     UserService:Symbol('UserService'),
     UserController:Symbol('UserController'),
@@ -9,5 +10,8 @@ export const TOKENS={
     CacheProvider:Symbol('CacheProvider'),
     MailjetProvider:Symbol('mailjetProvider'),
     NodeMailerProvider:Symbol('NodeMailerProvider'),
-    FireBaseProvider:Symbol('FireBaseProvider')
+    FireBaseProvider:Symbol('FireBaseProvider'),
+    AuthService:Symbol('AuthService'),
+    AuthController:Symbol('AuthController'),
+    AuthRepository:Symbol('AuthRepository')
 }
