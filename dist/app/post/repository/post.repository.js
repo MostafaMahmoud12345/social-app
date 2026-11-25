@@ -7,6 +7,9 @@ class PostRepository extends abstract_repository_1.AbstractRepository {
     constructor() {
         super(post_model_1.Post);
     }
+    async findAllByUser(userId) {
+        return await post_model_1.Post.find({ userId }).sort({ createdAt: -1 });
+    }
 }
 exports.PostRepository = PostRepository;
 exports.default = new PostRepository();

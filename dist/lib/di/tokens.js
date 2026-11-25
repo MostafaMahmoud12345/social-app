@@ -8,6 +8,9 @@ exports.TOKENS = {
     PostService: Symbol('PostService'),
     PostController: Symbol('PostController'),
     PostRepository: Symbol('PostRepository'),
+    CommentService: Symbol('CommentService'),
+    CommentController: Symbol('CommentController'),
+    CommentRepository: Symbol('CommentRepository'),
     CloudProvider: Symbol('CloudProvider'),
     CacheProvider: Symbol('CacheProvider'),
     MailjetProvider: Symbol('mailjetProvider'),
@@ -15,5 +18,5 @@ exports.TOKENS = {
     FireBaseProvider: Symbol('FireBaseProvider'),
     AuthService: Symbol('AuthService'),
     AuthController: Symbol('AuthController'),
-    AuthRepository: Symbol('AuthRepository')
+    AuthRepository: Symbol('AuthRepository'),
 };

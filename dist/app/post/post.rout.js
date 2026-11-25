@@ -1,2 +1,21 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.postRouter = void 0;
+const express_1 = require("express");
+const container_1 = __importDefault(require("../../lib/di/container"));
+const tokens_1 = require("../../lib/di/tokens");
+const authGuard_1 = require("../../lib/auth/authGuard");
+const postController = container_1.default.resolve(tokens_1.TOKENS.PostController);
+const commentController = container_1.default.resolve(tokens_1.TOKENS.CommentController);
+exports.postRouter = (0, express_1.Router)();
+exports.postRouter.use(authGuard_1.authGuard);
+exports.postRouter.post("/", postController.createPost);
+exports.postRouter.get("/", postController.getAllMyPosts);
+exports.postRouter.get("/:postId", postController.getSinglePost);
+exports.postRouter.patch("/:postId", postController.updatePost);
+exports.postRouter.delete("/:postId", postController.deletePost);
+exports.postRouter.post("/:postId/comment", commentController.createComment);
+exports.postRouter.get("/:postId/comment", commentController.getPostComments);

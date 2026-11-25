@@ -8,20 +8,20 @@ const schema = new mongoose_1.Schema({
         required: true,
         trim: true,
         minlength: 1,
-        maxlength: 300
+        maxlength: 300,
     },
     userId: {
         type: mongoose_1.Types.ObjectId,
-        ref: 'User',
-        requird: true
+        ref: "User",
+        required: true,
     },
     commentCount: {
         type: Number,
-        default: 0
+        default: 0,
     },
     reactionCount: {
         type: Number,
-        default: 0
-    }
-});
-exports.Post = (0, mongoose_1.model)('Post', schema);
+        default: 0,
+    },
+}, { timestamps: true });
+exports.Post = (0, mongoose_1.model)("Post", schema);
